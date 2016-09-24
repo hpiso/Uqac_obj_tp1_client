@@ -33,7 +33,7 @@ public class ClientApplication {
 
     public List<String> getCommands() {
 
-        String fileName =  "/Users/hugopiso/Projects/uqac/java_client/commandes.txt";
+        String fileName =  "/Users/hugopiso/Projects/uqac/java_client/commandes.txt"; //todo to change
         List<String> list = new ArrayList<>();
 
         try (BufferedReader br = Files.newBufferedReader(Paths.get(fileName))) {
