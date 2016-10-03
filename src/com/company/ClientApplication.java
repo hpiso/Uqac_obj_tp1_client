@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,8 @@ public class ClientApplication {
 
         switch (command.getCommand()){
             case "compilation":
-                //todo
+                command.setIdentificator(parts[1]);
+                command.setFunction(parts[2]);
                 break;
             case "chargement":
                 command.setIdentificator(parts[1]);
@@ -79,14 +81,36 @@ public class ClientApplication {
                 command.setFunction(parts[2]);
                 break;
             case "ecriture":
-                //todo
+                command.setIdentificator(parts[1]);
+                command.setFunction(parts[2]);
+                command.addValues(parts[3]);
                 break;
             case "lecture":
                 command.setIdentificator(parts[1]);
                 command.setFunction(parts[2]);
                 break;
             case "fonction":
-                //todo
+                command.setIdentificator(parts[1]);
+                command.setFunction(parts[2]);
+
+                // Check if the function has values
+                if (parts.length > 3 && parts[3] != null) {
+
+                    List<String> allValues = new ArrayList<String>(Arrays.asList(parts[3].split("\\,")));
+
+                    allValues.forEach((allValue) -> {
+
+                        String[] valueAndType = allValue.split("\\:");
+                        command.addTypes(valueAndType[0]);
+
+                        // if the value is between 2 (), we only get the value between it otherwise we can set everthing
+                        if (valueAndType[1].contains("(") && valueAndType[1].contains(")")) {
+                            valueAndType[1] = valueAndType[1].substring(valueAndType[1].indexOf("(") + 1);
+                            valueAndType[1] = valueAndType[1].substring(0, valueAndType[1].indexOf(")"));
+                        }
+                        command.addValues(valueAndType[1]);
+                    });
+                }
                 break;
             default:
                 System.out.println("Error");
