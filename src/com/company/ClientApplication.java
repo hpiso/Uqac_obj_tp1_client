@@ -28,12 +28,32 @@ public class ClientApplication {
      **/
     public void scenario() {
         List<String> commands = this.getCommands();
+        BufferedWriter bw = this.initializeOutputFile();
 
         commands.forEach((commandToExec) -> {
             Command command = this.parseAndInitialize(commandToExec);
 
-            this.executeCommand(command);
+            this.executeCommand(command, bw);
         });
+
+        try {
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public BufferedWriter initializeOutputFile() {
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./output.txt")))) {
+            return bw;
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**
@@ -124,21 +144,23 @@ public class ClientApplication {
      * Execute la comande via les sockets
      *
      **/
-    public void executeCommand(Command command) {
+    public void executeCommand(Command command, BufferedWriter bw) {
 
         try {
 
             //Open socket
             Socket socket = new Socket(InetAddress.getLocalHost(), this.port);
             ObjectOutputStream outToServer = new ObjectOutputStream(socket.getOutputStream());
-            BufferedReader inFromServer  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedReader inFromServer    = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             //Send command to server
             outToServer.writeObject(command);
 
             //Get response
             String response = inFromServer.readLine();
-            System.out.println("From server" + response);
+            //System.out.println("From server" + response);
+            bw.write(response);
+            bw.newLine();
 
             //close socket
             socket.close();
