@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class ClientApplication {
@@ -149,7 +150,9 @@ public class ClientApplication {
 
     public static void main(String[] args) {
 
-        Integer port = 2016;
+        Scanner reader = new Scanner(System.in);
+        System.out.println("Port number: ");
+        int port = reader.nextInt();
 
         ClientApplication client = new ClientApplication(port);
         client.scenario();
