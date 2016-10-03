@@ -151,14 +151,15 @@ public class ClientApplication {
             //Open socket
             Socket socket = new Socket(InetAddress.getLocalHost(), this.port);
             ObjectOutputStream outToServer = new ObjectOutputStream(socket.getOutputStream());
-            BufferedReader inFromServer    = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            //BufferedReader inFromServer    = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
 
             //Send command to server
             outToServer.writeObject(command);
 
+            ObjectInputStream inFromServer = new ObjectInputStream(socket.getInputStream());
             //Get response
-            String response = inFromServer.readLine();
-            //System.out.println("From server" + response);
+            String response = inFromServer.readUTF();
+            System.out.println("From server " + response);
             bw.write(response);
             bw.flush();
             bw.newLine();
