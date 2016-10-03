@@ -95,7 +95,7 @@ public class ClientApplication {
         Command command = new Command();
         command.setCommand(parts[0]);
 
-        switch (command.getCommand()){
+        switch (command.getCommand()) {
             case "compilation":
                 command.setIdentificator(parts[1]);
                 command.setFunction(parts[2]);
