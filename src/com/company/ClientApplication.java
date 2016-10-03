@@ -68,7 +68,7 @@ public class ClientApplication {
      **/
     public List<String> getCommands() {
 
-        String fileName =  "./commandes.txt"; //todo to change
+        String fileName =  "./commandes.txt";
         List<String> list = new ArrayList<>();
 
         try (BufferedReader br = Files.newBufferedReader(Paths.get(fileName))) {
