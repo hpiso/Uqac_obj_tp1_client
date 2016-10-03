@@ -29,7 +29,6 @@ public class ClientApplication {
     public void scenario() {
         List<String> commands = this.getCommands();
         BufferedWriter bw = this.initializeOutputFile();
-
         commands.forEach((commandToExec) -> {
             Command command = this.parseAndInitialize(commandToExec);
 
@@ -45,7 +44,8 @@ public class ClientApplication {
 
     public BufferedWriter initializeOutputFile() {
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./output.txt")))) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./output.txt")));
             return bw;
         } catch (FileNotFoundException ex) {
             System.out.println(ex.toString());
@@ -62,7 +62,7 @@ public class ClientApplication {
      **/
     public List<String> getCommands() {
 
-        String fileName =  "/Users/hugopiso/Projects/uqac/java_client/commandes.txt"; //todo to change
+        String fileName =  "./commandes.txt"; //todo to change
         List<String> list = new ArrayList<>();
 
         try (BufferedReader br = Files.newBufferedReader(Paths.get(fileName))) {
@@ -160,6 +160,7 @@ public class ClientApplication {
             String response = inFromServer.readLine();
             //System.out.println("From server" + response);
             bw.write(response);
+            bw.flush();
             bw.newLine();
 
             //close socket
