@@ -22,13 +22,16 @@ public class ClientApplication {
     }
 
     /**
-     * Scénatio de l'application
+     * Scénario de l'application
      * 1) On récupère la liste des commandes
-     * 2) On boucle sur chaque commande pour initaliser et exécuter cette commande
+     * 2) On créé un fichier output.txt
+     * 3) On boucle sur chaque commande pour initaliser et exécuter cette commande à envoyer au server
+     * 4) On ferme l'écriture du fichier
      **/
     public void scenario() {
         List<String> commands = this.getCommands();
         BufferedWriter bw = this.initializeOutputFile();
+
         commands.forEach((commandToExec) -> {
             Command command = this.parseAndInitialize(commandToExec);
 
@@ -42,6 +45,9 @@ public class ClientApplication {
         }
     }
 
+    /**
+     * Initialize the output file where the responses will be written (output.txt)
+     **/
     public BufferedWriter initializeOutputFile() {
 
         try {
@@ -124,7 +130,7 @@ public class ClientApplication {
                         String[] valueAndType = allValue.split("\\:");
                         command.addTypes(valueAndType[0]);
 
-                        // if the value is between 2 (), we only get the value between it otherwise we can set everthing
+                        // if the value is between 2 (), we only get the value between it otherwise we can set everything
                         if (valueAndType[1].contains("(") && valueAndType[1].contains(")")) {
                             valueAndType[1] = valueAndType[1].substring(valueAndType[1].indexOf("(") + 1);
                             valueAndType[1] = valueAndType[1].substring(0, valueAndType[1].indexOf(")"));
@@ -150,16 +156,17 @@ public class ClientApplication {
 
             //Open socket
             Socket socket = new Socket(InetAddress.getLocalHost(), this.port);
-            ObjectOutputStream outToServer = new ObjectOutputStream(socket.getOutputStream());
-            //BufferedReader inFromServer    = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
 
-            //Send command to server
+            //send command
+            ObjectOutputStream outToServer = new ObjectOutputStream(socket.getOutputStream());
             outToServer.writeObject(command);
 
+            //Read response
             ObjectInputStream inFromServer = new ObjectInputStream(socket.getInputStream());
-            //Get response
             String response = inFromServer.readUTF();
-            System.out.println("From server " + response);
+
+            System.out.println("From server : " + response);
+            //write response
             bw.write(response);
             bw.flush();
             bw.newLine();
