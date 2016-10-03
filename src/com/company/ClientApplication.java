@@ -19,18 +19,25 @@ public class ClientApplication {
         this.port = port;
     }
 
+    /**
+     * Scénatio de l'application
+     * 1) On récupère la liste des commandes
+     * 2) On boucle sur chaque commande pour initaliser et exécuter cette commande
+     **/
     public void scenario() {
-        System.out.println("Starting scenario");
         List<String> commands = this.getCommands();
 
         commands.forEach((commandToExec) -> {
-            Command command = new Command();
-            command.setCommand(commandToExec);
+            Command command = this.parseAndInitialize(commandToExec);
 
             this.executeCommand(command);
         });
     }
 
+    /**
+     * Récupère la liste des commandes du fichiers source
+     * Chaque commande est insérée dans une liste
+     **/
     public List<String> getCommands() {
 
         String fileName =  "/Users/hugopiso/Projects/uqac/java_client/commandes.txt"; //todo to change
@@ -48,6 +55,50 @@ public class ClientApplication {
         return list;
     }
 
+    /**
+     * Parse une commande pour instancier un objet Command avec les bonnes données
+     * suivant le type de commande (compilation, chargement,...)
+     *
+     **/
+    public Command parseAndInitialize(String commandToParse) {
+
+        String[] parts = commandToParse.split("\\#");
+
+        Command command = new Command();
+        command.setCommand(parts[0]);
+
+        switch (command.getCommand()){
+            case "compilation":
+                //todo
+                break;
+            case "chargement":
+                command.setIdentificator(parts[1]);
+                break;
+            case "creation":
+                command.setIdentificator(parts[1]);
+                command.setFunction(parts[2]);
+                break;
+            case "ecriture":
+                //todo
+                break;
+            case "lecture":
+                command.setIdentificator(parts[1]);
+                command.setFunction(parts[2]);
+                break;
+            case "fonction":
+                //todo
+                break;
+            default:
+                System.out.println("Error");
+        }
+
+        return command;
+    }
+
+    /**
+     * Execute la comande via les sockets
+     *
+     **/
     public void executeCommand(Command command) {
 
         try {
